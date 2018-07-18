@@ -1,0 +1,19 @@
+name: pinknoise8bit
+version: 0.2018.1
+summary: pinknoise8bit
+description: Tiny 4K snap that generates 8 bit pink noise random data
+confinement: strict
+
+parts:
+    all:
+        plugin: make
+        source: .
+        build-packages:
+            - gcc
+            - make
+
+apps:
+    pinknoise8bit:
+        command:
+            pinknoise8bit
+
