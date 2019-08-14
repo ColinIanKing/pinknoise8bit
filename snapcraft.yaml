@@ -1,5 +1,7 @@
 name: pinknoise8bit
-version: 0.2018.1
+version: git
+version-script: |
+    echo $(git describe --tags)
 summary: pinknoise8bit
 description: Tiny 4K snap that generates 8 bit pink noise random data
 confinement: strict
