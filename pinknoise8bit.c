@@ -30,7 +30,7 @@
 #include <stdint.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <sys/syscall.h>
+#include <time.h>
 
 static uint32_t w, z;
 
@@ -62,8 +62,8 @@ int main(void)
 	const float scalar = 256.0 / max;
 	uint8_t buffer[1024];
 
-	w = syscall(__NR_getpid);
-	z = syscall(__NR_time, NULL);
+	w = getpid();
+	z = time(NULL);
 
 	do {
 		for (i =0; i < sizeof(buffer); i++) {
@@ -81,6 +81,6 @@ int main(void)
 			rnd = (int64_t)mwc64() >> PINK_SHIFT;
 			buffer[i] = (int)((scalar * ((int64_t)sum + rnd)) + PINK_BIAS);
 		}
-	} while (syscall(__NR_write, 1, buffer, sizeof(buffer)) == sizeof(buffer));
+	} while (write(1, buffer, sizeof(buffer)) == sizeof(buffer));
 	return 0;
 }

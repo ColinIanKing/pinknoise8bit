@@ -1,15 +1,39 @@
 name: pinknoise8bit
-version: git
-version-script: |
-    echo $(git describe --tags)
 summary: pinknoise8bit
 description: Tiny 4K snap that generates 8 bit pink noise random data
 confinement: strict
+type: app
+grade: stable
+assumes: [snapd2.45]
+base: core20
+adopt-info: eventstat
+
+architectures:
+    - build-on: s390x
+    - build-on: ppc64el
+    - build-on: arm64
+    - build-on: armhf
+    - build-on: amd64
+    - build-on: i386
 
 parts:
     all:
         plugin: make
-        source: .
+        source: https://github.com/ColinIanKing/pinknoise8bit.git
+        override-pull: |
+            snapcraftctl pull
+            description="$(git describe HEAD --tags)"
+            sha=$(echo $description | tr '-' ' ' | awk '{print $NF}')
+            version=${description%$sha}
+            commits=$(git log --oneline | wc -l)
+            date=$(date +'%Y%m%d')
+            if test "$description" = "$sha"
+            then
+                version="$description"
+            else
+                version=$(echo $version$date-$commits-$sha | cut -c1-32)
+            fi
+            snapcraftctl set-version "$version"
         build-packages:
             - gcc
             - make
